@@ -1,0 +1,106 @@
+package com.project.threeam.services;
+
+import com.project.threeam.dtos.OrderDTO;
+import com.project.threeam.dtos.OrderDTO;
+import com.project.threeam.entities.OrderEntity;
+import com.project.threeam.entities.OrderEntity;
+import com.project.threeam.entities.UserEntity;
+import com.project.threeam.entities.enums.OrderStatusEnum;
+import com.project.threeam.repositories.OrderRepository;
+import com.project.threeam.repositories.UserRepository;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.bytebuddy.utility.RandomString;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class OrderService {
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public List<OrderDTO> getAllOrders() {
+        List<OrderEntity> orders = orderRepository.findAll();
+        List<OrderDTO> OrderDTOs = new ArrayList<>();
+        for (OrderEntity order : orders) {
+            OrderDTO OrderDTO = convertToDTO(order);
+            try {
+                OrderDTO.setUser_id(order.getUserOrderEntity().getUserId());
+                OrderDTOs.add(OrderDTO);
+            } catch (Exception e) {
+                OrderDTOs.add(OrderDTO);
+            }
+        }
+        return OrderDTOs;
+    }
+
+    public List<OrderDTO> getOrderByUserID(Long userID) {
+        Optional<UserEntity> userExits = userRepository.findByUserId(userID);
+
+            UserEntity user = userExits.get();
+        Optional<List<OrderEntity>> orderOptional = orderRepository.findByUserOrderEntity(user);
+        List<OrderEntity> orders = orderOptional.get();
+        List<OrderDTO> OrderDTOs = new ArrayList<>();
+        for (OrderEntity order : orders) {
+            OrderDTO OrderDTO = convertToDTO(order);
+            try {
+                OrderDTO.setUser_id(order.getUserOrderEntity().getUserId());
+                OrderDTOs.add(OrderDTO);
+            } catch (Exception e) {
+                OrderDTOs.add(OrderDTO);
+            }
+        }
+        return OrderDTOs;
+    }
+
+    public Boolean updateStatus(Long orderID, OrderStatusEnum status) {
+        Optional<OrderEntity> orderOptional = orderRepository.findByOrderId(orderID);
+        OrderEntity orderEntity = orderOptional.get();
+        if(orderOptional.isPresent()) {
+            orderEntity.setStatus(status);
+            OrderEntity savedEntity = orderRepository.save(orderEntity);
+            return  true;
+        }
+        return false;
+    }
+
+
+    public OrderDTO createOrder(OrderDTO orderDTO) {
+        try {
+            Optional<UserEntity> userExits = userRepository.findByUserId(orderDTO.getUser_id());
+            if(userExits.isPresent()) {
+                UserEntity user = userExits.get();
+                OrderEntity orderEntity = modelMapper.map(orderDTO, OrderEntity.class);
+                if(orderDTO.getStatus() == null) {
+                    orderEntity.setStatus(OrderStatusEnum.Preparing);
+                }
+                orderEntity.setUserOrderEntity(user);
+                OrderEntity savedEntity = orderRepository.save(orderEntity);
+                return convertToDTO(savedEntity);
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        return null;
+
+    }
+
+
+
+    private OrderDTO convertToDTO(OrderEntity orderEntity) {
+        return modelMapper.map(orderEntity, OrderDTO.class);
+    }
+}
