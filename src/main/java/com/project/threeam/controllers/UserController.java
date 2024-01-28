@@ -9,12 +9,14 @@ import com.project.threeam.response.CustomStatusResponse;
 import com.project.threeam.response.auth.AuthResponse;
 import com.project.threeam.response.auth.TokenRespone;
 import com.project.threeam.services.UserService;
+import com.project.threeam.utils.GetDataErrorUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -30,7 +32,8 @@ public class UserController {
     @Autowired
     private CustomStatusResponse customStatusResponse;
 
-
+    @Autowired
+    private GetDataErrorUtils getDataErrorUtils;
 
     @GetMapping("/GetUserList")
     public ResponseEntity<List<UserDTO>> getAllUser() {
@@ -77,8 +80,12 @@ public class UserController {
     }
 
     @PutMapping("/UpdateUser/{userId}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO, BindingResult rs) {
         try {
+            if(rs.hasErrors()){
+                var errors = getDataErrorUtils.DataError(rs);
+                return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
+            }
             UserDTO updatedUser = userService.updateUser(userId, userDTO);
             if (updatedUser == null) {
                 return customStatusResponse.NOTFOUND404("User not found");
@@ -105,8 +112,12 @@ public class UserController {
     }
 
     @PostMapping("/AddUser")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO, HttpServletRequest request) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO, HttpServletRequest request, BindingResult rs) {
         try {
+            if(rs.hasErrors()){
+                var errors = getDataErrorUtils.DataError(rs);
+                return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
+            }
             String userDTOEmail = userDTO.getEmail();
             String originalUrl = request.getRequestURL().toString();
             UserDTO userDTOCheck = userService.getUserByEmail(userDTOEmail);

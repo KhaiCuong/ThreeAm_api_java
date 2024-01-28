@@ -4,8 +4,11 @@ package com.project.threeam.controllers;
 import com.project.threeam.dtos.FeedbackDTO;
 import com.project.threeam.response.CustomStatusResponse;
 import com.project.threeam.services.FeedbackService;
+import com.project.threeam.utils.GetDataErrorUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +22,9 @@ public class FeedbackController {
 
     @Autowired
     private CustomStatusResponse customStatusResponse;
+
+    @Autowired
+    private GetDataErrorUtils getDataErrorUtils;
 
     @GetMapping("/GetFeedbackList")
     public ResponseEntity<List<FeedbackDTO>> getAllFeedbacks() {
@@ -49,8 +55,13 @@ public class FeedbackController {
 
 
     @PostMapping("/AddFeedback")
-    public ResponseEntity<FeedbackDTO> createFeedback(@RequestBody FeedbackDTO feedbackDTO) {
+    public ResponseEntity<FeedbackDTO> createFeedback(@RequestBody @Valid FeedbackDTO feedbackDTO , BindingResult rs) {
         try {
+            if(rs.hasErrors()){
+                var errors = getDataErrorUtils.DataError(rs);
+                return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
+            }
+
             FeedbackDTO createdFeedback = feedbackService.createFeedback(feedbackDTO);
             if(createdFeedback == null ){
                 return customStatusResponse.BADREQUEST400("Have error when create Feedback !");

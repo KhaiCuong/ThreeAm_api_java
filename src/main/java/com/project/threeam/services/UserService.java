@@ -6,6 +6,7 @@ import com.project.threeam.dtos.UserDTO;
 import com.project.threeam.entities.CategoryEntity;
 import com.project.threeam.entities.ProductEntity;
 import com.project.threeam.entities.UserEntity;
+import com.project.threeam.entities.enums.RoleEnum;
 import com.project.threeam.repositories.UserRepository;
 import com.project.threeam.requests.auth.LoginRequest;
 import com.project.threeam.response.auth.AuthResponse;

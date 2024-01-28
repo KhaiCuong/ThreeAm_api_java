@@ -3,8 +3,11 @@ package com.project.threeam.controllers;
 import com.project.threeam.dtos.CategoryDTO;
 import com.project.threeam.response.CustomStatusResponse;
 import com.project.threeam.services.CategoryService;
+import com.project.threeam.utils.GetDataErrorUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +21,8 @@ public class CategoryController {
     @Autowired
     private CustomStatusResponse customStatusResponse;
 
+    @Autowired
+    private GetDataErrorUtils getDataErrorUtils;
 
     @GetMapping("/GetCategoryList")
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
@@ -48,8 +53,12 @@ public class CategoryController {
     }
 
     @PostMapping("/AddCategory")
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO CategoryDTO) {
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody @Valid CategoryDTO CategoryDTO, BindingResult rs) {
         try {
+            if(rs.hasErrors()){
+                var errors = getDataErrorUtils.DataError(rs);
+                return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
+            }
             String categoryId = CategoryDTO.getCategoryId();
             CategoryDTO CategoryDTOCheck = categoryService.getCategoryById(categoryId);
             if(CategoryDTOCheck != null ) {
@@ -69,8 +78,12 @@ public class CategoryController {
     }
 
     @PutMapping("/UpdateCategory/{categoryId}")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable String categoryId, @RequestBody CategoryDTO CategoryDTO) {
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable @Valid String categoryId, @RequestBody CategoryDTO CategoryDTO, BindingResult rs) {
         try {
+            if(rs.hasErrors()){
+                var errors = getDataErrorUtils.DataError(rs);
+                return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
+            }
             CategoryDTO updatedCategory = categoryService.updateCategory(categoryId, CategoryDTO);
             if (updatedCategory == null) {
                 return customStatusResponse.NOTFOUND404("Category not found");

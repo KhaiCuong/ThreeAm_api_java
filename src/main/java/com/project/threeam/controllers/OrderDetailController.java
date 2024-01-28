@@ -4,8 +4,11 @@ package com.project.threeam.controllers;
 import com.project.threeam.dtos.OrderDetailDTO;
 import com.project.threeam.response.CustomStatusResponse;
 import com.project.threeam.services.OrderDetailService;
+import com.project.threeam.utils.GetDataErrorUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +22,9 @@ public class OrderDetailController {
 
     @Autowired
     private CustomStatusResponse customStatusResponse;
+
+    @Autowired
+    private GetDataErrorUtils getDataErrorUtils;
 
     @GetMapping("/GetOrderDetailList")
     public ResponseEntity<List<OrderDetailDTO>> getAllOrderDetails() {
@@ -49,8 +55,13 @@ public class OrderDetailController {
 
 
     @PostMapping("/AddOrderDetail")
-    public ResponseEntity<OrderDetailDTO> createOrderDetail(@RequestBody OrderDetailDTO OrderDetailDTO) {
+    public ResponseEntity<OrderDetailDTO> createOrderDetail(@RequestBody @Valid OrderDetailDTO OrderDetailDTO, BindingResult rs) {
         try {
+            if(rs.hasErrors()){
+                var errors = getDataErrorUtils.DataError(rs);
+                return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
+            }
+
             OrderDetailDTO createdOrderDetail = orderDetailService.createOrderDetail(OrderDetailDTO);
             if(createdOrderDetail == null ){
                 return customStatusResponse.BADREQUEST400("Have error when create Order Detail !");

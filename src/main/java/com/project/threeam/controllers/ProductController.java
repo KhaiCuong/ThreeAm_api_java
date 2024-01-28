@@ -4,9 +4,12 @@ import com.project.threeam.entities.ProductEntity;
 import com.project.threeam.response.CustomStatusResponse;
 import com.project.threeam.dtos.ProductDTO;
 import com.project.threeam.services.ProductService;
+import com.project.threeam.utils.GetDataErrorUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -23,6 +26,9 @@ public class ProductController {
 
     @Autowired
     private CustomStatusResponse customStatusResponse;
+
+    @Autowired
+    private GetDataErrorUtils getDataErrorUtils;
 
 
     @GetMapping("/GetProductList")
@@ -67,8 +73,12 @@ public class ProductController {
     }
 
     @PostMapping("/AddProduct")
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody @Valid ProductDTO productDTO, BindingResult rs) {
         try {
+            if(rs.hasErrors()){
+                var errors = getDataErrorUtils.DataError(rs);
+                return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
+            }
             String productId = productDTO.getProductId();
             ProductDTO productDTOCheck = productService.getProductById(productId);
             if(productDTOCheck != null ) {
@@ -88,8 +98,12 @@ public class ProductController {
     }
 
     @PutMapping("/UpdateProduct/{productId}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable String productId, @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable String productId, @RequestBody @Valid ProductDTO productDTO, BindingResult rs) {
         try {
+            if(rs.hasErrors()){
+                var errors = getDataErrorUtils.DataError(rs);
+                return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
+            }
             ProductDTO updatedProduct = productService.updateProduct(productId, productDTO);
             if (updatedProduct == null) {
                 return customStatusResponse.NOTFOUND404("Product not found");

@@ -7,8 +7,11 @@ import com.project.threeam.entities.enums.OrderStatusEnum;
 import com.project.threeam.response.CustomStatusResponse;
 import com.project.threeam.services.CategoryService;
 import com.project.threeam.services.OrderService;
+import com.project.threeam.utils.GetDataErrorUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +25,9 @@ public class OrderController {
 
     @Autowired
     private CustomStatusResponse customStatusResponse;
+
+    @Autowired
+    private GetDataErrorUtils getDataErrorUtils;
 
     @GetMapping("/GetOrderList")
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
@@ -52,8 +58,12 @@ public class OrderController {
 
 
     @PostMapping("/AddOrder")
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody @Valid OrderDTO orderDTO, BindingResult rs) {
         try {
+            if(rs.hasErrors()){
+                var errors = getDataErrorUtils.DataError(rs);
+                return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
+            }
             Long productId = orderDTO.getOrderId();
             OrderDTO createdOrder = orderService.createOrder(orderDTO);
             if(createdOrder == null ){
