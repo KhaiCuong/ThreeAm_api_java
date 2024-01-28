@@ -27,7 +27,7 @@ public class ProductDTO extends BaseDTO  {
 
     private Boolean Status;
 
-    @Size(max = 255, message = "Description must be at most 255 characters")
+//    @Size(max = 255, message = "Description must be at most 255 characters")
     private String description;
 
     private String image;
