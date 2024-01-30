@@ -64,11 +64,13 @@ public class OrderController {
                 var errors = getDataErrorUtils.DataError(rs);
                 return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
             }
-            Long productId = orderDTO.getOrderId();
+            Long userID = orderDTO.getUser_id();
+
             OrderDTO createdOrder = orderService.createOrder(orderDTO);
             if(createdOrder == null ){
                 return customStatusResponse.BADREQUEST400("Have error when create order !");
             }
+            createdOrder.setUser_id(userID);
             return customStatusResponse.CREATED201("Order created", createdOrder);
         } catch (Exception e) {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
