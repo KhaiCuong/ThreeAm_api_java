@@ -146,14 +146,16 @@ public class UserController {
         }
     }
 
-    @GetMapping("/Reset-Password")
-    public ResponseEntity<String> ResetUser(@RequestBody String email,@RequestBody String url) {
+    @GetMapping("/ResetPassword")
+    public ResponseEntity<String> ResetUser(@RequestBody String email,HttpServletRequest request) {
         try {
             UserDTO UserDTO = userService.getUserByEmail(email);
             if (UserDTO == null) {
                 return customStatusResponse.NOTFOUND404("Email does not exist, please re-enter email");
             }
-            Boolean rs = userService.updatePassword(email,url);
+            String originalUrl = request.getRequestURL().toString();
+
+            Boolean rs = userService.updatePassword(email,originalUrl);
             if(rs) {
                 return customStatusResponse.OK200("Please enter your email to confirm");
             } else {

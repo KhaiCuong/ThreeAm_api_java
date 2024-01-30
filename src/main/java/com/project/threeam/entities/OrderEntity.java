@@ -32,6 +32,14 @@ public class OrderEntity extends BaseEntity {
     @Column(name="status")
     private OrderStatusEnum Status;
 
+    @Column(name="quantity")
+    private Integer quantity;
+
+    @Column(name="total_price")
+    private Double totalPrice;
+
+    private String image;
+
     @Column(name = "username", nullable = false)
     private String username;
 

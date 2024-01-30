@@ -32,6 +32,12 @@ public class OrderDTO {
     @NotEmpty(message = "Username is not empty")
     private String username;
 
+    private Integer quantity;
+
+    private Double totalPrice;
+
+    private String image;
+
     @NotNull(message = "User id is not empty")
     @Positive(message = "User id must be a positive value")
     private Long user_id;
