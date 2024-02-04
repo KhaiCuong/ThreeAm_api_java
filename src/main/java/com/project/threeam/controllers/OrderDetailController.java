@@ -53,7 +53,7 @@ public class OrderDetailController {
         }
     }
 
-
+    @CrossOrigin
     @PostMapping("/AddOrderDetail")
     public ResponseEntity<OrderDetailDTO> createOrderDetail(@RequestBody @Valid OrderDetailDTO OrderDetailDTO, BindingResult rs) {
         try {

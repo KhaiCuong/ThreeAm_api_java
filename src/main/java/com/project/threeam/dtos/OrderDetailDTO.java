@@ -26,8 +26,8 @@ public class OrderDetailDTO {
 
     @NotNull(message = "Order id is not empty")
     @Positive(message = "Order id must be a positive value")
-    private Long order_id;
+    private Long orderId;
 
     @NotEmpty(message = "Product id is not empty")
-    private String product_id;
+    private String productId;
 }

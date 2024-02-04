@@ -18,5 +18,5 @@ public class PaymentDTO {
 
     @NotNull(message = "Order id is not empty")
     @Positive(message = "Order id must be a positive value")
-    private Long order_id;
+    private Long orderId;
 }

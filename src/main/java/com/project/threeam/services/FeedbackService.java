@@ -40,8 +40,8 @@ public class FeedbackService {
         for (FeedbackEntity feedback : feedbacks) {
             FeedbackDTO feedbackDTO = convertToDTO(feedback);
             try {
-                feedbackDTO.setProduct_id(feedback.getProductFeedbackEntity().getProductId());
-                feedbackDTO.setUser_id(feedback.getUserFeedbackEntity().getUserId());
+                feedbackDTO.setProductId(feedback.getProductFeedbackEntity().getProductId());
+                feedbackDTO.setUserId(feedback.getUserFeedbackEntity().getUserId());
 
                 feedbackDTOs.add(feedbackDTO);
             } catch (Exception e) {
@@ -61,8 +61,8 @@ public class FeedbackService {
         for (FeedbackEntity feedback : feedbacks) {
             FeedbackDTO feedbackDTO = convertToDTO(feedback);
             try {
-                feedbackDTO.setProduct_id(feedback.getProductFeedbackEntity().getProductId());
-                feedbackDTO.setUser_id(feedback.getUserFeedbackEntity().getUserId());
+                feedbackDTO.setProductId(feedback.getProductFeedbackEntity().getProductId());
+                feedbackDTO.setUserId(feedback.getUserFeedbackEntity().getUserId());
                 productDTOs.add(feedbackDTO);
             } catch (Exception e) {
                 productDTOs.add(feedbackDTO);
@@ -73,14 +73,18 @@ public class FeedbackService {
 
     public FeedbackDTO createFeedback(FeedbackDTO feedbackDTO) {
         try {
-            Optional<ProductEntity> productExits = productRepository.findByProductId(feedbackDTO.getProduct_id());
-            Optional<UserEntity> userExits = userRepository.findByUserId(feedbackDTO.getUser_id());
+            Optional<ProductEntity> productExits = productRepository.findByProductId(feedbackDTO.getProductId());
+            Optional<UserEntity> userExits = userRepository.findByUserId(feedbackDTO.getUserId());
 
             if(productExits.isPresent()) {
                 ProductEntity product = productExits.get();
                 UserEntity user = userExits.get();
 
-                FeedbackEntity feedbackEntity = modelMapper.map(feedbackDTO, FeedbackEntity.class);
+
+                FeedbackEntity feedbackEntity = new FeedbackEntity();
+                feedbackEntity.setTitle(feedbackDTO.getTitle());
+                feedbackEntity.setStart(feedbackDTO.getStart());
+                feedbackEntity.setContent(feedbackDTO.getContent());
                 feedbackEntity.setProductFeedbackEntity(product);
                 feedbackEntity.setUserFeedbackEntity(user);
 
@@ -99,4 +103,6 @@ public class FeedbackService {
     private FeedbackDTO convertToDTO(FeedbackEntity feedbackEntity) {
         return modelMapper.map(feedbackEntity, FeedbackDTO.class);
     }
+
+
 }

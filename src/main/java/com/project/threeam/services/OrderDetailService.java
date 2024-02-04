@@ -40,8 +40,8 @@ public class OrderDetailService {
         for (OrderDetailEntity orderDetail : orderDetails) {
             OrderDetailDTO orderDetailDTO = convertToDTO(orderDetail);
             try {
-                orderDetailDTO.setOrder_id(orderDetail.getOrderEntity().getOrderId());
-                orderDetailDTO.setProduct_id(orderDetail.getProductDetailEntity().getProductId());
+                orderDetailDTO.setOrderId(orderDetail.getOrderEntity().getOrderId());
+                orderDetailDTO.setProductId(orderDetail.getProductDetailEntity().getProductId());
                 orderDetailDTOs.add(orderDetailDTO);
             } catch (Exception e) {
                 orderDetailDTOs.add(orderDetailDTO);
@@ -60,8 +60,8 @@ public class OrderDetailService {
         for (OrderDetailEntity orderDetail : orderDetails) {
             OrderDetailDTO orderDetailDTO = convertToDTO(orderDetail);
             try {
-                orderDetailDTO.setOrder_id(orderDetail.getOrderEntity().getOrderId());
-                orderDetailDTO.setProduct_id(orderDetail.getProductDetailEntity().getProductId());
+                orderDetailDTO.setOrderId(orderDetail.getOrderEntity().getOrderId());
+                orderDetailDTO.setProductId(orderDetail.getProductDetailEntity().getProductId());
                 orderDetailDTOs.add(orderDetailDTO);
             } catch (Exception e) {
                 orderDetailDTOs.add(orderDetailDTO);
@@ -72,8 +72,8 @@ public class OrderDetailService {
 
     public OrderDetailDTO createOrderDetail(OrderDetailDTO orderDetailDTO) {
         try {
-            Optional<OrderEntity> orderExits = orderRepository.findByOrderId(orderDetailDTO.getOrder_id());
-            Optional<ProductEntity> productExits = productRepository.findByProductId(orderDetailDTO.getProduct_id());
+            Optional<OrderEntity> orderExits = orderRepository.findByOrderId(orderDetailDTO.getOrderId());
+            Optional<ProductEntity> productExits = productRepository.findByProductId(orderDetailDTO.getProductId());
 
             if(orderExits.isPresent() && productExits.isPresent()) {
                 OrderEntity order = orderExits.get();

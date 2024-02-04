@@ -33,7 +33,7 @@ public class ProductDTO extends BaseDTO  {
     private String image;
 
     @Size(max = 255, message = "category_id must be at most 255 characters")
-    private String category_id;
+    private String categoryId;
 
 
 

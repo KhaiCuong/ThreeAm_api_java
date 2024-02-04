@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/Order")
 public class OrderController {
@@ -64,13 +65,13 @@ public class OrderController {
                 var errors = getDataErrorUtils.DataError(rs);
                 return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
             }
-            Long userID = orderDTO.getUser_id();
+            Long userID = orderDTO.getUserId();
 
             OrderDTO createdOrder = orderService.createOrder(orderDTO);
             if(createdOrder == null ){
                 return customStatusResponse.BADREQUEST400("Have error when create order !");
             }
-            createdOrder.setUser_id(userID);
+            createdOrder.setUserId(userID);
             return customStatusResponse.CREATED201("Order created", createdOrder);
         } catch (Exception e) {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());

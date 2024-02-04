@@ -40,5 +40,5 @@ public class OrderDTO {
 
     @NotNull(message = "User id is not empty")
     @Positive(message = "User id must be a positive value")
-    private Long user_id;
+    private Long userId;
 }

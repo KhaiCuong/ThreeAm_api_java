@@ -35,7 +35,7 @@ public class PaymentService {
         for (PaymentEntity payment : payments) {
             PaymentDTO PaymentDTO = convertToDTO(payment);
             try {
-                PaymentDTO.setOrder_id(payment.getOrderPaymentEntity().getOrderId());
+                PaymentDTO.setOrderId(payment.getOrderPaymentEntity().getOrderId());
                 PaymentDTOs.add(PaymentDTO);
             } catch (Exception e) {
                 PaymentDTOs.add(PaymentDTO);
@@ -50,13 +50,13 @@ public class PaymentService {
         Optional<PaymentEntity> paymentsOptional = paymentRepository.findByOrderPaymentEntity(order);
         PaymentEntity payment = paymentsOptional.get();
         PaymentDTO paymentDTO = convertToDTO(payment);
-        paymentDTO.setOrder_id(payment.getOrderPaymentEntity().getOrderId());
+        paymentDTO.setOrderId(payment.getOrderPaymentEntity().getOrderId());
         return paymentDTO;
     }
 
     public PaymentDTO createPayment(PaymentDTO PaymentDTO) {
         try {
-            Optional<OrderEntity> orderExits = orderRepository.findByOrderId(PaymentDTO.getOrder_id());
+            Optional<OrderEntity> orderExits = orderRepository.findByOrderId(PaymentDTO.getOrderId());
             if(orderExits.isPresent()) {
                 OrderEntity order = orderExits.get();
                 PaymentEntity paymentEntity = modelMapper.map(PaymentDTO, PaymentEntity.class);

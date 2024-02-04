@@ -35,7 +35,7 @@ public class OrderService {
         for (OrderEntity order : orders) {
             OrderDTO OrderDTO = convertToDTO(order);
             try {
-                OrderDTO.setUser_id(order.getUserOrderEntity().getUserId());
+                OrderDTO.setUserId(order.getUserOrderEntity().getUserId());
                 OrderDTOs.add(OrderDTO);
             } catch (Exception e) {
                 OrderDTOs.add(OrderDTO);
@@ -54,7 +54,7 @@ public class OrderService {
         for (OrderEntity order : orders) {
             OrderDTO OrderDTO = convertToDTO(order);
             try {
-                OrderDTO.setUser_id(order.getUserOrderEntity().getUserId());
+                OrderDTO.setUserId(order.getUserOrderEntity().getUserId());
                 OrderDTOs.add(OrderDTO);
             } catch (Exception e) {
                 OrderDTOs.add(OrderDTO);
@@ -77,7 +77,7 @@ public class OrderService {
 
     public OrderDTO createOrder(OrderDTO orderDTO) {
         try {
-            Optional<UserEntity> userExits = userRepository.findByUserId(orderDTO.getUser_id());
+            Optional<UserEntity> userExits = userRepository.findByUserId(orderDTO.getUserId());
             if(userExits.isPresent()) {
                 UserEntity user = userExits.get();
                 OrderEntity orderEntity = modelMapper.map(orderDTO, OrderEntity.class);

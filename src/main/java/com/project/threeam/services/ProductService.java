@@ -32,7 +32,7 @@ public class ProductService {
         for (ProductEntity product : products) {
             ProductDTO productDTO = convertToDTO(product);
           try {
-              productDTO.setCategory_id(product.getCategoryEntity().getCategoryId());
+              productDTO.setCategoryId(product.getCategoryEntity().getCategoryId());
               productDTOs.add(productDTO);
           } catch (Exception e) {
               productDTOs.add(productDTO);
@@ -48,7 +48,7 @@ public class ProductService {
             ProductEntity product = productOptional.get();
             ProductDTO productDTO = convertToDTO(product);
             try {
-                productDTO.setCategory_id(product.getCategoryEntity().getCategoryId());
+                productDTO.setCategoryId(product.getCategoryEntity().getCategoryId());
             } catch (Exception e) {
             }
             return productDTO;
@@ -58,7 +58,7 @@ public class ProductService {
 
     public ProductDTO createProduct(ProductDTO productDTO) {
         try {
-            Optional<CategoryEntity> categoryExits = categoryRepository.findByCategoryId(productDTO.getCategory_id());
+            Optional<CategoryEntity> categoryExits = categoryRepository.findByCategoryId(productDTO.getCategoryId());
             if(categoryExits.isPresent()) {
                 CategoryEntity category = categoryExits.get();
                 ProductEntity productEntity = modelMapper.map(productDTO, ProductEntity.class);
@@ -104,8 +104,8 @@ public class ProductService {
                 existingProduct.setImage(productDTO.getImage());
             }
 
-            if (productDTO.getCategory_id() != null) {
-                Optional<CategoryEntity> categoryExits = categoryRepository.findByCategoryId(productDTO.getCategory_id());
+            if (productDTO.getCategoryId() != null) {
+                Optional<CategoryEntity> categoryExits = categoryRepository.findByCategoryId(productDTO.getCategoryId());
                 if(categoryExits.isPresent()) {
                     CategoryEntity category = categoryExits.get();
                     existingProduct.setCategoryEntity(category);
@@ -141,7 +141,7 @@ public class ProductService {
         for (ProductEntity product : products) {
             ProductDTO productDTO = convertToDTO(product);
             try {
-                productDTO.setCategory_id(product.getCategoryEntity().getCategoryId());
+                productDTO.setCategoryId(product.getCategoryEntity().getCategoryId());
                 productDTOs.add(productDTO);
             } catch (Exception e) {
                 productDTOs.add(productDTO);
