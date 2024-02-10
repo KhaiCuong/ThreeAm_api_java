@@ -2,9 +2,9 @@ package com.project.threeam.services;
 
 import com.project.threeam.dtos.OrderDTO;
 import com.project.threeam.dtos.OrderDTO;
+import com.project.threeam.dtos.ProductDTO;
+import com.project.threeam.entities.*;
 import com.project.threeam.entities.OrderEntity;
-import com.project.threeam.entities.OrderEntity;
-import com.project.threeam.entities.UserEntity;
 import com.project.threeam.entities.enums.OrderStatusEnum;
 import com.project.threeam.repositories.OrderRepository;
 import com.project.threeam.repositories.UserRepository;
@@ -96,6 +96,56 @@ public class OrderService {
         }
         return null;
 
+    }
+
+    public OrderDTO updateOrder(Long orderId, OrderDTO orderDTO) {
+        Optional<OrderEntity> existingOrderOptional = orderRepository.findByOrderId(orderId);
+        if (existingOrderOptional.isPresent()) {
+            // Update existing entity directly
+            OrderEntity existingOrder = existingOrderOptional.get();
+
+            if (orderDTO.getOrderId() != null) {
+                existingOrder.setOrderId(orderDTO.getOrderId());
+            }
+            if (orderDTO.getAddress() != null) {
+                existingOrder.setAddress(orderDTO.getAddress());
+            }
+            if (orderDTO.getStatus() != null) {
+                existingOrder.setStatus(orderDTO.getStatus());
+            }
+            if (orderDTO.getUsername() != null) {
+                existingOrder.setUsername(orderDTO.getUsername());
+            }
+            if (orderDTO.getStatus() != null) {
+                existingOrder.setStatus(orderDTO.getStatus());
+            }
+            if (orderDTO.getQuantity() != null) {
+                existingOrder.setQuantity(orderDTO.getQuantity());
+            }
+            if (orderDTO.getImage() != null) {
+                existingOrder.setImage(orderDTO.getImage());
+            }
+            if (orderDTO.getTotalPrice() != null) {
+                existingOrder.setTotalPrice(orderDTO.getTotalPrice());
+            }
+
+            if (orderDTO.getUserId() != null) {
+                Optional<UserEntity> userExits = userRepository.findByUserId(orderDTO.getUserId());
+                if(userExits.isPresent()) {
+                    UserEntity userEntity = userExits.get();
+                    existingOrder.setUserOrderEntity(userEntity);
+                } else {
+                    return null;
+                }
+
+            }
+
+            OrderEntity savedEntity = orderRepository.save(existingOrder);  // Save the updated entity
+
+            return convertToDTO(savedEntity);
+        } else {
+            return null;
+        }
     }
 
 

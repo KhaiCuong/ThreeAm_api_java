@@ -40,12 +40,13 @@ public class OrderDetailController {
         }
     }
 
-    @GetMapping("/GetOrderDetailListByOrderId/{orderID}")
+
+    @GetMapping("/GetDetailListByOrder/{orderID}")
     public ResponseEntity<List<OrderDetailDTO>> getAllDetailByOrderID(@PathVariable Long orderID) {
         try {
             List<OrderDetailDTO> OrderDetails = orderDetailService.getOrderDetailByOrderID(orderID);
             if (OrderDetails.isEmpty()) {
-                return customStatusResponse.NOTFOUND404("No Orde rDetail found");
+                return customStatusResponse.NOTFOUND404("No Order Detail found");
             }
             return customStatusResponse.OK200("Get List of Order Detail Successfully", OrderDetails);
         } catch (Exception e) {

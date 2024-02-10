@@ -45,7 +45,7 @@ public class OrderController {
     }
 
     @GetMapping("/GetOrderListByUserId/{userId}")
-    public ResponseEntity<List<OrderDTO>> getAllProductsBycategory(@PathVariable Long userId) {
+    public ResponseEntity<List<OrderDTO>> getAllOrderListByUserIdtOrderListByUserId(@PathVariable Long userId) {
         try {
             List<OrderDTO> orders = orderService.getOrderByUserID(userId);
             if (orders.isEmpty()) {
@@ -87,6 +87,24 @@ public class OrderController {
                 return customStatusResponse.NOTFOUND404("Order not found");
             }
             return customStatusResponse.OK200("Order Status updated");
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
+
+
+    @PutMapping("/UpdateOrder/{orderID}")
+    public ResponseEntity<OrderDTO> updateProduct(@PathVariable Long orderID, @RequestBody @Valid OrderDTO orderDTO, BindingResult rs) {
+        try {
+            if(rs.hasErrors()){
+                var errors = getDataErrorUtils.DataError(rs);
+                return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
+            }
+            OrderDTO updatedOrder = orderService.updateOrder(orderID, orderDTO);
+            if (updatedOrder == null) {
+                return customStatusResponse.NOTFOUND404("Order not found");
+            }
+            return customStatusResponse.OK200("Order updated", updatedOrder);
         } catch (Exception e) {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
