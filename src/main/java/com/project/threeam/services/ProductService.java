@@ -104,6 +104,16 @@ public class ProductService {
                 existingProduct.setImage(productDTO.getImage());
             }
 
+            if (productDTO.getDiameter() != null) {
+                existingProduct.setDiameter(productDTO.getDiameter());
+            }
+            if (productDTO.getIsWaterproof() != null) {
+                existingProduct.setIsWaterproof(productDTO.getIsWaterproof());
+            }
+            if (productDTO.getGender() != null) {
+                existingProduct.setGender(productDTO.getGender());
+            }
+
             if (productDTO.getCategoryId() != null) {
                 Optional<CategoryEntity> categoryExits = categoryRepository.findByCategoryId(productDTO.getCategoryId());
                 if(categoryExits.isPresent()) {

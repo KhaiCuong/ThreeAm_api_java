@@ -1,6 +1,7 @@
 package com.project.threeam.dtos;
 
 import com.project.threeam.entities.CategoryEntity;
+import com.project.threeam.entities.enums.GenderEnum;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +28,14 @@ public class ProductDTO extends BaseDTO  {
 
     private Boolean Status;
 
-//    @Size(max = 255, message = "Description must be at most 255 characters")
+    private Boolean isWaterproof;
+
+    private Double diameter;
+
+    private GenderEnum gender;
+
+
+    //    @Size(max = 255, message = "Description must be at most 255 characters")
     private String description;
 
     private String image;

@@ -2,6 +2,7 @@ package com.project.threeam.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.project.threeam.entities.enums.GenderEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,8 +35,19 @@ public class ProductEntity extends BaseEntity  {
     @Column(name="status")
     private Boolean Status;
 
+
+
     @Column(name = "description", nullable = true)
     private String description;
+
+    @Column(name = "diameter")
+    private Double diameter;
+
+    @Column(name="is_waterproof")
+    private Boolean isWaterproof;
+
+    @Column(name = "gender")
+    private GenderEnum gender;
 
     @Column(name = "image", nullable = true)
     private String image;
