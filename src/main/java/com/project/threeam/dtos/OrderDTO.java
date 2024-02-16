@@ -16,7 +16,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-public class OrderDTO {
+public class OrderDTO extends BaseDTO {
 
     private Long orderId;
 

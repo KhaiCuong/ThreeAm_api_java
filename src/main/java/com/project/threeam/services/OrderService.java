@@ -6,8 +6,10 @@ import com.project.threeam.dtos.ProductDTO;
 import com.project.threeam.entities.*;
 import com.project.threeam.entities.OrderEntity;
 import com.project.threeam.entities.enums.OrderStatusEnum;
+import com.project.threeam.repositories.OrderDetailRepository;
 import com.project.threeam.repositories.OrderRepository;
 import com.project.threeam.repositories.UserRepository;
+import org.hibernate.query.Order;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class OrderService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
 
     public List<OrderDTO> getAllOrders() {
         List<OrderEntity> orders = orderRepository.findAll();
@@ -61,6 +66,41 @@ public class OrderService {
             }
         }
         return OrderDTOs;
+    }
+
+
+    public Boolean checkUserOrderProduct(Long userID, String productId) {
+        Optional<UserEntity> userExits = userRepository.findByUserId(userID);
+        UserEntity user = userExits.get();
+        Optional<List<OrderEntity>> orderOptional = orderRepository.findByUserOrderEntity(user);
+        List<OrderEntity> orders = orderOptional.get();
+        for (OrderEntity order : orders) {
+            Optional<List<OrderDetailEntity>> orderDetailOptional = orderDetailRepository.findByOrderEntity(order);
+            List<OrderDetailEntity> orderDetails = orderDetailOptional.get();
+            for (OrderDetailEntity orderDetail : orderDetails) {
+                if(orderDetail.getProductDetailEntity().getProductId().equals(productId)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+
+    public OrderDTO getOrderById(Long orderId) {
+        Optional<OrderEntity> orderOptional = orderRepository.findByOrderId(orderId);
+        if(orderOptional.isPresent()) {
+            OrderEntity order = orderOptional.get();
+            OrderDTO orderDTO = convertToDTO(order);
+            try {
+                orderDTO.setUserId(order.getUserOrderEntity().getUserId());
+            } catch (Exception e) {
+            }
+            return orderDTO;
+        } else { return null;}
+
     }
 
     public Boolean updateStatus(Long orderID, OrderStatusEnum status) {

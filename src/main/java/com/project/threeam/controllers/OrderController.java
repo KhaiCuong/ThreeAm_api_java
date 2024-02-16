@@ -58,6 +58,29 @@ public class OrderController {
     }
 
 
+    @GetMapping("/GetOrder/{orderId}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId) {
+        try {
+            OrderDTO orderDTO = orderService.getOrderById(orderId);
+            if (orderDTO == null) {
+                return customStatusResponse.NOTFOUND404("Order not found");
+            }
+            return customStatusResponse.OK200("Order found", orderDTO);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
+
+    @GetMapping("/checkOrderProduct/{userId}")
+    public ResponseEntity<Boolean> getOrderById(@PathVariable Long userId, @RequestBody String productId) {
+        try {
+            Boolean check = orderService.checkUserOrderProduct(userId,productId);
+            return customStatusResponse.OK200("Check compelete!", check);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
+
     @PostMapping("/AddOrder")
     public ResponseEntity<OrderDTO> createOrder(@RequestBody @Valid OrderDTO orderDTO, BindingResult rs) {
         try {
@@ -91,7 +114,6 @@ public class OrderController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
-
 
     @PutMapping("/UpdateOrder/{orderID}")
     public ResponseEntity<OrderDTO> updateProduct(@PathVariable Long orderID, @RequestBody @Valid OrderDTO orderDTO, BindingResult rs) {
