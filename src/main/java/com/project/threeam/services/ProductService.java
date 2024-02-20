@@ -113,6 +113,9 @@ public class ProductService {
             if (productDTO.getGender() != null) {
                 existingProduct.setGender(productDTO.getGender());
             }
+            if (productDTO.getTotalBuy() != null) {
+                existingProduct.setTotalBuy(productDTO.getTotalBuy());
+            }
 
             if (productDTO.getCategoryId() != null) {
                 Optional<CategoryEntity> categoryExits = categoryRepository.findByCategoryId(productDTO.getCategoryId());

@@ -50,6 +50,9 @@ public class ProductEntity extends BaseEntity  {
     @Column(name = "image", nullable = true)
     private String image;
 
+    @Column(name = "total_buy", nullable = true)
+    private Integer totalBuy;
+
 
     @JsonBackReference
     @ManyToOne
