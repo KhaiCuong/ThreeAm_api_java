@@ -35,7 +35,7 @@ public class OrderService {
     private OrderDetailRepository orderDetailRepository;
 
     public List<OrderDTO> getAllOrders() {
-        List<OrderEntity> orders = orderRepository.findAll();
+        List<OrderEntity> orders = orderRepository.findAllByOrderByOrderIdAsc();
         List<OrderDTO> OrderDTOs = new ArrayList<>();
         for (OrderEntity order : orders) {
             OrderDTO OrderDTO = convertToDTO(order);

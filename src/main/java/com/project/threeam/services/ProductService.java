@@ -180,6 +180,23 @@ public class ProductService {
         } else { return false;}
     }
 
+
+    public Boolean updateProductTotalBuy(String productId, Integer quantity) {
+        Optional<ProductEntity> productOptional = productRepository.findByProductId(productId);
+
+        if(productOptional.isPresent()) {
+            ProductEntity product = productOptional.get();
+            try {
+                Integer totalBuy = product.getTotalBuy() + quantity;
+                product.setTotalBuy(totalBuy);
+                productRepository.save(product);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        } else { return false;}
+    }
+
     public Boolean updateProductStatus(String productId) {
         Optional<ProductEntity> productOptional = productRepository.findByProductId(productId);
 

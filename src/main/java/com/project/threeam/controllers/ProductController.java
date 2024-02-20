@@ -142,6 +142,19 @@ public class ProductController {
         }
     }
 
+    @PutMapping("/UpdateProductTotalBuy/{productId}")
+    public ResponseEntity<ProductDTO> UpdateProductTotalBuy(@PathVariable String productId, @RequestBody Integer quantity) {
+        try {
+            Boolean updatedProductTotalBuy = productService.updateProductTotalBuy(productId, quantity);
+            if (updatedProductTotalBuy == false) {
+                return customStatusResponse.NOTFOUND404("Product not found");
+            }
+            return customStatusResponse.OK200("Product updated");
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
+
     @DeleteMapping("/DeleteProduct/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable String productId) {
         try {

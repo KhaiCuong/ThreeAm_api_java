@@ -23,7 +23,7 @@ public class CategoryService {
     private ModelMapper modelMapper;
 
     public List<CategoryDTO> getAllCategories() {
-        List<CategoryEntity> categories = categoryRepository.findAll();
+        List<CategoryEntity> categories = categoryRepository.findAllByOrderByCategoryIdAsc();
         return categories.stream().map(this::convertToDTO).toList();
     }
 
