@@ -35,8 +35,6 @@ public class ProductEntity extends BaseEntity  {
     @Column(name="status")
     private Boolean Status;
 
-
-
     @Column(name = "description", nullable = true)
     private String description;
 

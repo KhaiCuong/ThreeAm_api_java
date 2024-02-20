@@ -6,6 +6,7 @@ import com.project.threeam.entities.OrderEntity;
 import com.project.threeam.entities.PaymentEntity;
 import com.project.threeam.entities.PaymentEntity;
 import com.project.threeam.entities.ProductEntity;
+import com.project.threeam.entities.enums.OrderStatusEnum;
 import com.project.threeam.repositories.OrderRepository;
 import com.project.threeam.repositories.PaymentRepository;
 import org.modelmapper.ModelMapper;
@@ -53,6 +54,20 @@ public class PaymentService {
         paymentDTO.setOrderId(payment.getOrderPaymentEntity().getOrderId());
         return paymentDTO;
     }
+
+    public Boolean updateStatus(Long orderId, Boolean status) {
+        Optional<OrderEntity> orderExits = orderRepository.findByOrderId(orderId);
+        OrderEntity order = orderExits.get();
+        Optional<PaymentEntity> paymentOptional = paymentRepository.findByOrderPaymentEntity(order);
+        PaymentEntity paymentEntity = paymentOptional.get();
+        if(paymentOptional.isPresent()) {
+            paymentEntity.setStatus(status);
+            PaymentEntity savedEntity = paymentRepository.save(paymentEntity);
+            return  true;
+        }
+        return false;
+    }
+
 
     public PaymentDTO createPayment(PaymentDTO PaymentDTO) {
         try {

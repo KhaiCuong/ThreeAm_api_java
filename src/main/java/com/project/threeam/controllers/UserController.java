@@ -1,10 +1,13 @@
 package com.project.threeam.controllers;
 
 
+import com.project.threeam.dtos.OrderDTO;
 import com.project.threeam.dtos.UserDTO;
 
 import com.project.threeam.entities.UserEntity;
+import com.project.threeam.entities.enums.OrderStatusEnum;
 import com.project.threeam.requests.auth.LoginRequest;
+import com.project.threeam.requests.auth.ResetPasswordRequest;
 import com.project.threeam.response.CustomStatusResponse;
 import com.project.threeam.response.auth.AuthResponse;
 import com.project.threeam.response.auth.TokenRespone;
@@ -98,6 +101,29 @@ public class UserController {
         }
     }
 
+    @PutMapping("/UpdatePassword/{userId}")
+    public ResponseEntity<UserDTO> updatePassword(@PathVariable Long userId, @RequestBody @Valid ResetPasswordRequest data, BindingResult rs) {
+        try {
+            if(rs.hasErrors()){
+                var errors = getDataErrorUtils.DataError(rs);
+                return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
+            }
+            if(userService.verifyResetPass(data.getCode())) {
+                UserDTO userDTO = userService.getUserById(userId);
+                userDTO.setPassword(data.getPassword());
+                UserDTO updatedUser = userService.updateUser(userId, userDTO);
+                if (updatedUser == null) {
+                    return customStatusResponse.NOTFOUND404("User not found");
+                }
+                return customStatusResponse.OK200("User updated", updatedUser);
+            } else {
+                return customStatusResponse.NOTFOUND404("User not found");
+            }
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
+
 
     @DeleteMapping("/DeleteUser/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
@@ -148,8 +174,22 @@ public class UserController {
         }
     }
 
-    @GetMapping("/ResetPassword")
-    public ResponseEntity<String> ResetUser(@RequestBody String email,HttpServletRequest request) {
+    @PutMapping("/UpdateUserStatus/{userid}")
+    public ResponseEntity<OrderDTO> updateUserStatus(@PathVariable Long userid, @RequestBody Boolean status) {
+        try {
+            Boolean updatedProductStatus = userService.updateStatus(userid,status);
+            if (updatedProductStatus == false) {
+                return customStatusResponse.NOTFOUND404("User not found");
+            }
+            return customStatusResponse.OK200("User Status updated");
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/ResetPassword/{email}")
+    public ResponseEntity<String> ResetUser(@PathVariable String email,HttpServletRequest request) {
         try {
             UserDTO UserDTO = userService.getUserByEmail(email);
             if (UserDTO == null) {

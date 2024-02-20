@@ -26,7 +26,7 @@ public class ProductService {
     private ModelMapper modelMapper;
 
     public List<ProductDTO> getAllProducts() {
-        List<ProductEntity> products = productRepository.findAll();
+        List<ProductEntity> products = productRepository.findAllByOrderByProductIdAsc();
 
         List<ProductDTO> productDTOs = new ArrayList<>();
         for (ProductEntity product : products) {

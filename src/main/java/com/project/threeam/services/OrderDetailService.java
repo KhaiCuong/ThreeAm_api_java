@@ -35,7 +35,7 @@ public class OrderDetailService {
     private ModelMapper modelMapper;
 
     public List<OrderDetailDTO> getAllOrderDetails() {
-        List<OrderDetailEntity> orderDetails = orderDetailRepository.findAll();
+        List<OrderDetailEntity> orderDetails = orderDetailRepository.findAllByOrderByDetailIdDesc();
         List<OrderDetailDTO> orderDetailDTOs = new ArrayList<>();
         for (OrderDetailEntity orderDetail : orderDetails) {
             OrderDetailDTO orderDetailDTO = convertToDTO(orderDetail);

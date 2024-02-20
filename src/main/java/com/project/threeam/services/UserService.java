@@ -4,8 +4,10 @@ import com.project.threeam.dtos.CategoryDTO;
 import com.project.threeam.dtos.ProductDTO;
 import com.project.threeam.dtos.UserDTO;
 import com.project.threeam.entities.CategoryEntity;
+import com.project.threeam.entities.OrderEntity;
 import com.project.threeam.entities.ProductEntity;
 import com.project.threeam.entities.UserEntity;
+import com.project.threeam.entities.enums.OrderStatusEnum;
 import com.project.threeam.entities.enums.RoleEnum;
 import com.project.threeam.repositories.UserRepository;
 import com.project.threeam.requests.auth.LoginRequest;
@@ -47,7 +49,7 @@ public class UserService {
     private AuthenticationManager authenticationManager;
 
     public List<UserDTO> getAllUsers() {
-        List<UserEntity> users = userRepository.findAll();
+        List<UserEntity> users = userRepository.findAllByOrderByUserIdAsc();
         return users.stream().map(this::convertToDTO).toList();
 
     }
@@ -70,7 +72,6 @@ public class UserService {
         Optional<UserEntity> user = userRepository.findByEmail(email);
         return  user.get();
     }
-
 
     public UserDTO createUser(UserDTO userDTO, String originalUrl) {
         UserEntity userEntity = modelMapper.map(userDTO, UserEntity.class);
@@ -109,7 +110,7 @@ public class UserService {
 
 
         content = content.replace("[[name]]", user.getFullname());
-        String verifyURL = originalUrl + user.getVerificationCode();
+        String verifyURL = "http://localhost:3000/reset-password/" + user.getVerificationCode();
         content = content.replace("[[URL]]", verifyURL);
 
 
@@ -150,6 +151,30 @@ public class UserService {
 
     }
 
+    public Boolean updateStatus(Long userID, Boolean status) {
+        Optional<UserEntity> userOptional = userRepository.findByUserId(userID);
+        if(userOptional.isPresent()) {
+            UserEntity userEntity = userOptional.get();
+            userEntity.setVerify(status);
+            UserEntity savedEntity = userRepository.save(userEntity);
+            return  true;
+        }
+        return false;
+    }
+
+
+    public Boolean verifyResetPass(String verificationCode) {
+        Optional<UserEntity> userOptional = userRepository.findByVerificationCode(verificationCode);
+        UserEntity user = userOptional.get();
+        if (user == null) {
+            return false;
+        } else {
+            user.setVerificationCode(null);
+            userRepository.save(user);
+            return true;
+        }
+
+    }
 
     public UserDTO updateUser(Long userId, UserDTO userDTO) {
         Optional<UserEntity> existingUserOptional = userRepository.findByUserId(userId);
@@ -200,8 +225,6 @@ public class UserService {
         } return false;
     }
 
-
-
     public TokenRespone login(LoginRequest signInRequest) throws Exception {
         try{
 
@@ -218,8 +241,6 @@ public class UserService {
             throw new Exception("email or password incorrect");
         }
     }
-
-
 
 
     private UserDTO convertToDTO(UserEntity userEntity) {

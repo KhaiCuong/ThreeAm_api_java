@@ -10,8 +10,8 @@ import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Data
-public class PaymentDTO {
-    private Boolean Status;
+public class PaymentDTO extends BaseDTO {
+    private Boolean status;
 
     @NotEmpty(message = "Fullname is not empty")
     private String fullname;
@@ -19,4 +19,5 @@ public class PaymentDTO {
     @NotNull(message = "Order id is not empty")
     @Positive(message = "Order id must be a positive value")
     private Long orderId;
+
 }

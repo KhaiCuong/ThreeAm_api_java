@@ -1,6 +1,8 @@
 package com.project.threeam.controllers;
 
+import com.project.threeam.dtos.OrderDTO;
 import com.project.threeam.dtos.PaymentDTO;
+import com.project.threeam.entities.enums.OrderStatusEnum;
 import com.project.threeam.response.CustomStatusResponse;
 import com.project.threeam.services.PaymentService;
 import com.project.threeam.utils.GetDataErrorUtils;
@@ -70,5 +72,19 @@ public class PaymentController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
 
+    }
+
+
+    @PutMapping("/UpdateStatusPayment/{orderId}")
+    public ResponseEntity<OrderDTO> updatePaymentStatus(@PathVariable Long orderId, @RequestBody Boolean status) {
+        try {
+            Boolean updatedPaymentStatus = paymentService.updateStatus(orderId,status);
+            if (updatedPaymentStatus == false) {
+                return customStatusResponse.NOTFOUND404("Payment not found");
+            }
+            return customStatusResponse.OK200("Payment Status updated");
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
     }
 }

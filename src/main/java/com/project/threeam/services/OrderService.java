@@ -78,7 +78,7 @@ public class OrderService {
             Optional<List<OrderDetailEntity>> orderDetailOptional = orderDetailRepository.findByOrderEntity(order);
             List<OrderDetailEntity> orderDetails = orderDetailOptional.get();
             for (OrderDetailEntity orderDetail : orderDetails) {
-                if(orderDetail.getProductDetailEntity().getProductId().equals(productId)) {
+                if(orderDetail.getProductDetailEntity().getProductId().equals(productId) && order.getStatus() == OrderStatusEnum.Completed) {
                     return true;
                 }
             }

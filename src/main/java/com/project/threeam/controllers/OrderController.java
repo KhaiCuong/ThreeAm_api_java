@@ -71,8 +71,8 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/checkOrderProduct/{userId}")
-    public ResponseEntity<Boolean> getOrderById(@PathVariable Long userId, @RequestBody String productId) {
+    @GetMapping("/checkOrderProduct/{userId}/{productId}")
+    public ResponseEntity<Boolean> checkUserOrder(@PathVariable Long userId, @PathVariable String productId) {
         try {
             Boolean check = orderService.checkUserOrderProduct(userId,productId);
             return customStatusResponse.OK200("Check compelete!", check);
@@ -103,7 +103,7 @@ public class OrderController {
     }
 
     @PutMapping("/UpdateStatusOrder/{orderID}")
-    public ResponseEntity<OrderDTO> updateProductStatus(@PathVariable Long orderID,@RequestBody OrderStatusEnum status) {
+    public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable Long orderID,@RequestBody OrderStatusEnum status) {
         try {
             Boolean updatedProductStatus = orderService.updateStatus(orderID,status);
             if (updatedProductStatus == false) {
@@ -116,7 +116,7 @@ public class OrderController {
     }
 
     @PutMapping("/UpdateOrder/{orderID}")
-    public ResponseEntity<OrderDTO> updateProduct(@PathVariable Long orderID, @RequestBody @Valid OrderDTO orderDTO, BindingResult rs) {
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long orderID, @RequestBody @Valid OrderDTO orderDTO, BindingResult rs) {
         try {
             if(rs.hasErrors()){
                 var errors = getDataErrorUtils.DataError(rs);

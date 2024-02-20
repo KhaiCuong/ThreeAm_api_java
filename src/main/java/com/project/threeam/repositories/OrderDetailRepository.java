@@ -9,5 +9,8 @@ import java.util.Optional;
 
 public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity, Long > {
     Optional<OrderDetailEntity> findByDetailId(Long detailId);
+
+    List<OrderDetailEntity> findAllByOrderByDetailIdDesc();
+
     Optional<List<OrderDetailEntity>> findByOrderEntity(OrderEntity orderId);
 }

@@ -13,6 +13,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>  {
     Optional<UserEntity> findByUserId(Long id);
     Optional<UserEntity> findByEmail(String email);
 
+    List<UserEntity> findAllByOrderByUserIdAsc();
+
+
     @Query("SELECT u FROM UserEntity u WHERE u.verificationCode = ?1")
     Optional<UserEntity> findByVerificationCode(String code);
 }
