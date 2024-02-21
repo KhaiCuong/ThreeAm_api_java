@@ -30,4 +30,7 @@ public class OrderDetailDTO {
 
     @NotEmpty(message = "Product id is not empty")
     private String productId;
+
+    private Boolean CanFeedBack ;
+
 }
