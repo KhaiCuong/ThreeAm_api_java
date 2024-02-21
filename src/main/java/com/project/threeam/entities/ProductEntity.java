@@ -70,5 +70,9 @@ public class ProductEntity extends BaseEntity  {
     @OneToMany(mappedBy = "productFeedbackEntity",fetch = FetchType.LAZY ,orphanRemoval = true)
     @JsonManagedReference
     private Set<FeedbackEntity> FeedbackEntities;
+
+    @OneToOne(mappedBy = "autionProductEntity")
+    @JsonBackReference
+    private AutionEntity autionEntity;
 }
 

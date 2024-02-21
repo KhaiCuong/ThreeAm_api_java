@@ -54,4 +54,8 @@ public class UserEntity extends BaseEntity  {
     @OneToMany(mappedBy = "userFeedbackEntity",fetch = FetchType.LAZY ,orphanRemoval = true)
     @JsonManagedReference
     private Set<FeedbackEntity> FeedbackEntities;
+
+    @OneToMany(mappedBy = "userBidEntity",fetch = FetchType.LAZY ,orphanRemoval = true)
+    @JsonManagedReference
+    private Set<BidEntity> bidEntities;
 }
