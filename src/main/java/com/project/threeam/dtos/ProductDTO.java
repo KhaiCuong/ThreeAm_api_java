@@ -34,8 +34,9 @@ public class ProductDTO extends BaseDTO  {
 
     private GenderEnum gender;
 
-
     private Integer totalBuy;
+
+    private Integer type;
 
     //    @Size(max = 255, message = "Description must be at most 255 characters")
     private String description;

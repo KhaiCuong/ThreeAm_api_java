@@ -117,6 +117,10 @@ public class ProductService {
                 existingProduct.setTotalBuy(productDTO.getTotalBuy());
             }
 
+            if (productDTO.getType() != null) {
+                existingProduct.setType(productDTO.getType());
+            }
+
             if (productDTO.getCategoryId() != null) {
                 Optional<CategoryEntity> categoryExits = categoryRepository.findByCategoryId(productDTO.getCategoryId());
                 if(categoryExits.isPresent()) {

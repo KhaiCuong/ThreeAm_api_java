@@ -53,6 +53,8 @@ public class ProductEntity extends BaseEntity  {
     @Column(name = "total_buy", nullable = true)
     private Integer totalBuy;
 
+    @Column(name = "type", nullable = true)
+    private Integer type;
 
     @JsonBackReference
     @ManyToOne

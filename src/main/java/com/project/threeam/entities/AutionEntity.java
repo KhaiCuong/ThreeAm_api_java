@@ -30,7 +30,7 @@ public class AutionEntity extends BaseEntity {
     @Column(name="status")
     private Boolean status;
 
-    @Column(name="total_price")
+    @Column(name="lastBidPrice")
     private Double lastBidPrice;
 
     private String image;
