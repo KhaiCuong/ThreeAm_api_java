@@ -29,10 +29,23 @@ public class AutionController {
 
     @Autowired
     private GetDataErrorUtils getDataErrorUtils;
+//    @GetMapping("/getlist")
+//    public ResponseEntity<List<AutionDTO>> getAllAution() {
+//        try {
+//            List<AutionDTO> entities = autionService.getAlls();
+//            if (entities.isEmpty()) {
+//                return customStatusResponse.NOTFOUND404("No Aution found");
+//            }
+//            return customStatusResponse.OK200("Get List of Aution Successfully", entities);
+//        } catch (Exception e) {
+//            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+//        }
+//    }
+
     @GetMapping("/getlist")
-    public ResponseEntity<List<AutionDTO>> getAllAution() {
+    public ResponseEntity<List<AutionEntity>> getAllAution() {
         try {
-            List<AutionDTO> entities = autionService.getAlls();
+            List<AutionEntity> entities = autionService.getAlls();
             if (entities.isEmpty()) {
                 return customStatusResponse.NOTFOUND404("No Aution found");
             }
@@ -61,4 +74,23 @@ public class AutionController {
         }
 
     }
+//@PostMapping("/addnew")
+//public ResponseEntity<AutionEntity> createNew(@RequestBody @Valid AutionEntity autionEntity, BindingResult rs) {
+//    try {
+//        if(rs.hasErrors()){
+//            var errors = getDataErrorUtils.DataError(rs);
+//            return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
+//        }
+//
+//        AutionEntity newEntity = autionService.createNew(autionEntity);
+//        if(newEntity == null ){
+//            return customStatusResponse.BADREQUEST400("Aution ID Not Found");
+//
+//        }
+//        return customStatusResponse.CREATED201("Aution created", newEntity);
+//    } catch (Exception e) {
+//        return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+//    }
+//
+//}
 }
