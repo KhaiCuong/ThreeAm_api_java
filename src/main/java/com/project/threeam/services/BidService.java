@@ -2,7 +2,6 @@ package com.project.threeam.services;
 
 import com.project.threeam.dtos.AutionDTO;
 import com.project.threeam.dtos.BidDTO;
-import com.project.threeam.dtos.CategoryDTO;
 import com.project.threeam.entities.*;
 import com.project.threeam.repositories.AutionRepository;
 import com.project.threeam.repositories.BidRepository;
@@ -58,6 +57,64 @@ public class BidService {
         }
         return null;
 
+    }
+
+    public BidDTO getBidDTOById(Long autionID) {
+        Optional<BidEntity> entityOptional = bidRepository.findByBidId(autionID);
+
+        if(entityOptional.isPresent()) {
+            BidEntity entity = entityOptional.get();
+            BidDTO entityDTO = convertToDTO(entity);
+            try {
+                entityDTO.setAutionId(entity.getAutionBidEntity().getAutionId());
+                entityDTO.setUserId(entity.getUserBidEntity().getUserId());
+
+            } catch (Exception e) {
+            }
+            return entityDTO;
+        } else { return null;}
+
+    }
+
+    public BidEntity getBidById(Long autionID) {
+        Optional<BidEntity> entityOptional = bidRepository.findByBidId(autionID);
+        if(entityOptional.isPresent()) {
+            BidEntity entity = entityOptional.get();
+            return entity;
+        } else { return null;}
+
+    }
+
+
+    public BidDTO updateBid(Long id, BidDTO bidDTO) {
+        Optional<BidEntity> existingOptional = bidRepository.findByBidId(id);
+        if (existingOptional.isPresent()) {
+            // Update existing entity directly
+            BidEntity existing = existingOptional.get();
+
+            if (bidDTO.getBidId() != null) {
+                existing.setBidId(bidDTO.getBidId());
+            }
+            if (bidDTO.getPidPice() != null) {
+                existing.setPidPice(bidDTO.getPidPice());
+            }
+
+            if (bidDTO.getAutionId() != null) {
+                Optional<AutionEntity> forienkeyExist = autionRepository.findByAutionId(bidDTO.getAutionId());
+                if(forienkeyExist.isPresent()) {
+                    AutionEntity forienkey = forienkeyExist.get();
+                    existing.setAutionBidEntity(forienkey);
+                } else {
+                    return null;
+                }
+
+            }
+            BidEntity savedEntity = bidRepository.save(existing);  // Save the updated entity
+
+            return convertToDTO(savedEntity);
+        } else {
+            return null;
+        }
     }
 
 

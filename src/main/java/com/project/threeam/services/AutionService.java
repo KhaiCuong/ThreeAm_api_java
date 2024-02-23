@@ -3,6 +3,7 @@ package com.project.threeam.services;
 import com.project.threeam.dtos.AutionDTO;
 import com.project.threeam.dtos.CategoryDTO;
 import com.project.threeam.dtos.OrderDTO;
+import com.project.threeam.dtos.ProductDTO;
 import com.project.threeam.entities.*;
 import com.project.threeam.entities.enums.OrderStatusEnum;
 import com.project.threeam.repositories.AutionRepository;
@@ -20,7 +21,6 @@ public class AutionService {
 
     @Autowired
     private AutionRepository autionRepository;
-
 
     @Autowired
     private ModelMapper modelMapper;
@@ -74,6 +74,77 @@ public class AutionService {
 //        return null;
 //
 //    }
+
+    public AutionDTO getAutionDTOById(Long autionID) {
+        Optional<AutionEntity> entityOptional = autionRepository.findByAutionId(autionID);
+
+        if(entityOptional.isPresent()) {
+            AutionEntity entity = entityOptional.get();
+            AutionDTO entityDTO = convertToDTO(entity);
+            try {
+                entityDTO.setProductId(entity.getAutionProductEntity().getProductId());
+            } catch (Exception e) {
+            }
+            return entityDTO;
+        } else { return null;}
+
+    }
+
+    public AutionEntity getAutionById(Long autionID) {
+        Optional<AutionEntity> entityOptional = autionRepository.findByAutionId(autionID);
+
+        if(entityOptional.isPresent()) {
+            AutionEntity entity = entityOptional.get();
+            return entity;
+        } else { return null;}
+
+    }
+
+    public AutionDTO updateAution(Long id, AutionDTO autionDTO) {
+        Optional<AutionEntity> existingOptional = autionRepository.findByAutionId(id);
+        if (existingOptional.isPresent()) {
+            // Update existing entity directly
+            AutionEntity existing = existingOptional.get();
+
+            if (autionDTO.getAutionId() != null) {
+                existing.setAutionId(autionDTO.getAutionId());
+            }
+            if (autionDTO.getName() != null) {
+                existing.setName(autionDTO.getName());
+            }
+            if (autionDTO.getStatus() != null) {
+                existing.setStatus(autionDTO.getStatus());
+            }
+            if (autionDTO.getLastBidPrice() != null) {
+                existing.setLastBidPrice(autionDTO.getLastBidPrice());
+            }
+            if (autionDTO.getImage() != null) {
+                existing.setImage(autionDTO.getImage());
+            }
+            if (autionDTO.getStartTime() != null) {
+                existing.setStartTime(autionDTO.getStartTime());
+            }
+            if (autionDTO.getEndTime() != null) {
+                existing.setEndTime(autionDTO.getEndTime());
+            }
+
+            if (autionDTO.getProductId() != null) {
+                Optional<ProductEntity> forienkeyExist = productRepository.findByProductId(autionDTO.getProductId());
+                if(forienkeyExist.isPresent()) {
+                    ProductEntity forienkey = forienkeyExist.get();
+                    existing.setAutionProductEntity(forienkey);
+                } else {
+                    return null;
+                }
+
+            }
+            AutionEntity savedEntity = autionRepository.save(existing);  // Save the updated entity
+
+            return convertToDTO(savedEntity);
+        } else {
+            return null;
+        }
+    }
 
 
     private AutionDTO convertToDTO(AutionEntity autionEntity) {

@@ -1,7 +1,9 @@
 package com.project.threeam.controllers;
 
 
+import com.project.threeam.dtos.AutionDTO;
 import com.project.threeam.dtos.BidDTO;
+import com.project.threeam.dtos.ProductDTO;
 import com.project.threeam.entities.AutionEntity;
 import com.project.threeam.entities.BidEntity;
 import com.project.threeam.response.CustomStatusResponse;
@@ -60,5 +62,36 @@ public class BidController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
 
+    }
+
+    @GetMapping("/GetAution/{id}")
+    public ResponseEntity<BidEntity> getAutionById(@PathVariable Long id) {
+        try {
+            BidEntity dataDTO = bidService.getBidById(id);
+            if (dataDTO == null) {
+                return customStatusResponse.NOTFOUND404("Aution not found");
+            }
+            return customStatusResponse.OK200("Aution found", dataDTO);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+
+    }
+
+    @PutMapping("/UpdateAution/{id}")
+    public ResponseEntity<ProductDTO> updateAution(@PathVariable Long id, @RequestBody @Valid BidDTO bidDTO, BindingResult rs) {
+        try {
+            if(rs.hasErrors()){
+                var errors = getDataErrorUtils.DataError(rs);
+                return customStatusResponse.BADREQUEST400("Provider data is incorrect",errors);
+            }
+            BidDTO updateData = bidService.updateBid(id, bidDTO);
+            if (updateData == null) {
+                return customStatusResponse.NOTFOUND404("Product not found");
+            }
+            return customStatusResponse.OK200("Product updated", updateData);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
     }
 }
