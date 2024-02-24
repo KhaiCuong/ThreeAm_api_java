@@ -48,6 +48,8 @@ public class BidService {
                 newEntity.setPidPice(bidDTO.getPidPice());
                 newEntity.setUserBidEntity(user);
                 newEntity.setAutionBidEntity(entity);
+                newEntity.setUserName(bidDTO.getUserName());
+
 
                 BidEntity savedEntity = bidRepository.save(newEntity);
                 return convertToDTO(savedEntity);
