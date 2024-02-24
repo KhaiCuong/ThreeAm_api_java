@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "bid")
-public class BidEntity {
+public class BidEntity extends BaseEntity {
 
     @Id
     @Column(name = "bid_id", unique = true)
