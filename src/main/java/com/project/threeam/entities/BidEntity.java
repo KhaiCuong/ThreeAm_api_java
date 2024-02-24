@@ -23,6 +23,9 @@ public class BidEntity {
     @Column(name="pid_price")
     private Double pidPice;
 
+    @Column(name="userName")
+    private String userName;
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "aution_id", referencedColumnName = "aution_id")

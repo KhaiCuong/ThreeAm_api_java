@@ -13,6 +13,8 @@ public class BidDTO extends BaseDTO{
 
     private Double pidPice;
 
+    private String userName;
+
     private Long autionId;
 
     private Long userId;
