@@ -194,6 +194,9 @@ public class UserService {
             if (userDTO.getEmail() != null) {
                 existingUser.setEmail(userDTO.getEmail());
             }
+            if (userDTO.getPhone_number() != null) {
+                existingUser.setPhone_number(userDTO.getPhone_number());
+            }
 
 
             if (userDTO.getFullname() != null) {

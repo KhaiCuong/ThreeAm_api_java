@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -144,6 +145,20 @@ public class AutionService {
         } else {
             return null;
         }
+    }
+
+    public AutionDTO getAutionByProducyID(String productId) {
+        Optional<ProductEntity> productExits = productRepository.findByProductId(productId);
+        if(productExits.isPresent()) {
+            ProductEntity product = productExits.get();
+            Optional<AutionEntity> autionOptional = autionRepository.findByAutionProductEntity(product);
+            if(autionOptional.isPresent()) {
+                AutionEntity autionEntity = autionOptional.get();
+                AutionDTO autionDTO = convertToDTO(autionEntity);
+                return autionDTO;
+            } else {return  null;}
+        } else {return  null;}
+
     }
 
 

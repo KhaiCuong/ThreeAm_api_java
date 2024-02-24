@@ -3,6 +3,7 @@ package com.project.threeam.controllers;
 
 
 import com.project.threeam.dtos.AutionDTO;
+import com.project.threeam.dtos.OrderDTO;
 import com.project.threeam.dtos.ProductDTO;
 import com.project.threeam.entities.AutionEntity;
 import com.project.threeam.response.CustomStatusResponse;
@@ -74,6 +75,19 @@ public class AutionController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
 
+    }
+
+    @GetMapping("/GetAutionByProductId/{id}")
+    public ResponseEntity<AutionDTO> GetAutionByProductId(@PathVariable String id) {
+        try {
+            AutionDTO autionDTO = autionService.getAutionByProducyID(id);
+            if (autionDTO == null) {
+                return customStatusResponse.NOTFOUND404("No Aution found");
+            }
+            return customStatusResponse.OK200("Get Aution Successfully", autionDTO);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
     }
 
     @GetMapping("/GetAution/{id}")

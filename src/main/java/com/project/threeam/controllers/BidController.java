@@ -3,6 +3,7 @@ package com.project.threeam.controllers;
 
 import com.project.threeam.dtos.AutionDTO;
 import com.project.threeam.dtos.BidDTO;
+import com.project.threeam.dtos.OrderDTO;
 import com.project.threeam.dtos.ProductDTO;
 import com.project.threeam.entities.AutionEntity;
 import com.project.threeam.entities.BidEntity;
@@ -76,6 +77,19 @@ public class BidController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
 
+    }
+
+    @GetMapping("/GetBidByAutionId/{id}")
+    public ResponseEntity<List<BidDTO>> GetBidByAutionId(@PathVariable Long id) {
+        try {
+            List<BidDTO> bidDTOs = bidService.getBidListByAutionID(id);
+            if (bidDTOs.isEmpty()) {
+                return customStatusResponse.NOTFOUND404("No Bid found");
+            }
+            return customStatusResponse.OK200("Get Bid Successfully", bidDTOs);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
     }
 
     @PutMapping("/UpdateAution/{id}")

@@ -2,6 +2,7 @@ package com.project.threeam.services;
 
 import com.project.threeam.dtos.AutionDTO;
 import com.project.threeam.dtos.BidDTO;
+import com.project.threeam.dtos.OrderDTO;
 import com.project.threeam.entities.*;
 import com.project.threeam.repositories.AutionRepository;
 import com.project.threeam.repositories.BidRepository;
@@ -10,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,6 +86,28 @@ public class BidService {
         } else { return null;}
 
     }
+
+    public List<BidDTO> getBidListByAutionID(Long autionId) {
+        Optional<AutionEntity> autionExits = autionRepository.findByAutionId(autionId);
+        if(autionExits.isPresent()) {
+            AutionEntity aution = autionExits.get();
+            Optional<List<BidEntity>> bid = bidRepository.findByAutionBidEntity(aution);
+            List<BidEntity> bidList = bid.get();
+            List<BidDTO> bidDTOList = new ArrayList<>();
+            for (BidEntity biditem : bidList) {
+                BidDTO bidDto = convertToDTO(biditem);
+                try {
+                    bidDto.setAutionId(biditem.getAutionBidEntity().getAutionId());
+                    bidDTOList.add(bidDto);
+                } catch (Exception e) {
+                    bidDTOList.add(bidDto);
+                }
+            }
+            return bidDTOList;
+        } else {return new ArrayList<>();}
+
+    }
+
 
 
     public BidDTO updateBid(Long id, BidDTO bidDTO) {
