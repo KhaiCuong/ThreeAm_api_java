@@ -33,6 +33,9 @@ public class OrderDetailEntity {
     @Column(name = "image", nullable = true)
     private String image;
 
+    @Column(name="CanFeedBack ")
+    private Boolean CanFeedBack ;
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "order_id")
